@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Button } from '@mui/material';
 
 const App = () => {
   return (
@@ -18,6 +19,9 @@ const App = () => {
         >
           Learn React
         </a>
+        <Button variant="text">Text</Button>
+        <Button variant="contained">Contained</Button>
+        <Button variant="outlined">Outlined</Button>
       </header>
     </div>
   );
