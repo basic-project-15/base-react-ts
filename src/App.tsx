@@ -1,14 +1,40 @@
-import React from 'react';
-import { Typography } from '@mui/material';
+import { useEffect, useCallback, useReducer } from 'react'
 
-const App = ()  => {
+// Hooks
+import { authReducer, INITIAL_AUTH } from '@hooks/reducers'
+
+// Components
+import { AuthContext } from '@hooks/contexts'
+import { AppRouter } from '@routes'
+
+// Services
+import { stGetAuth } from '@services/storage'
+
+const App = () => {
+  const [auth, dispatchAuth] = useReducer(authReducer, INITIAL_AUTH)
+
+  useEffect(() => {
+    loadUserInfo()
+  }, [])
+
+  const loadUserInfo = useCallback(() => {
+    const { success, data } = stGetAuth()
+    if (success) {
+      const { isLogin, ...payload } = data
+      dispatchAuth({
+        type: 'login',
+        payload,
+      })
+    } else {
+      dispatchAuth({ type: 'logout' })
+    }
+  }, [])
+
   return (
-    <div className='flex w-full bg-blue-400 h-screen justify-center items-center'>
-      <Typography variant="h1" component="h2" style={{fontFamily: 'Poppins-Bold'}}>
-        Hola Mundo
-      </Typography>
-    </div>
-  );
+    <AuthContext.Provider value={{ auth, dispatchAuth }}>
+      <AppRouter />
+    </AuthContext.Provider>
+  )
 }
 
-export default App;
+export default App
